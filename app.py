@@ -16,7 +16,7 @@ from werkzeug.utils import secure_filename
 import os
 import matplotlib
 matplotlib.use('Agg')
-import base64
+# import base64
 
 # Import the separated functions
 from export_pdf_word_txt import export_pdf, export_word, export_txt
@@ -41,6 +41,9 @@ model_base = malaya.summarization.abstractive.huggingface(model='mesolitica/fine
 
 # Load the knowledge graph model
 kg_model = malaya.knowledge_graph.huggingface()
+
+# Import the general entity model from Malaya
+entity_model = malaya.entity.general_entity()
 
 app = Flask(__name__)
 app.secret_key = "your-secret-key"
@@ -122,6 +125,7 @@ def summarizer():
         
         word_scores = None
         kg_data = None  # Initialize the knowledge graph data variable
+        entities = None  # Initialize the entities variable
         
         if summary_type == 'abstractive':
             summary = abstractive_model.generate([cleaned_text], max_length=256, temperature=0.5)
@@ -136,8 +140,13 @@ def summarizer():
             word_scores = sorted(r['score'], key=lambda item: item[1], reverse=True)[:20]
         
         # Generate the knowledge graph
-        kg_result = kg_model.generate([summary_text], max_length=256)  # Adjusted to generate two graphs for demonstration
+        kg_result = kg_model.generate([summary_text], max_length=256)
         kg_data = generate_knowledge_graph_images(kg_result)
+        
+        # Extract general Malay entities
+        entities = entity_model.predict(summary_text)
+        
+        print(entities)  # Print the structure of entities for debugging
 
         if 'username' in session:
             cur = mysql.connection.cursor()
@@ -145,9 +154,9 @@ def summarizer():
                         (session['userid'], summary_text, datetime.utcnow()))
             mysql.connection.commit()
             cur.close()
-            return render_template('summarizer.html', username=session['username'], text=rawtext, summary=summary_text, word_scores=word_scores, kg_data=kg_data)
+            return render_template('summarizer.html', username=session['username'], text=rawtext, summary=summary_text, word_scores=word_scores, kg_data=kg_data, entities=entities)
         else:
-            return render_template('summarizer.html', text=rawtext, summary=summary_text, word_scores=word_scores, kg_data=kg_data)
+            return render_template('summarizer.html', text=rawtext, summary=summary_text, word_scores=word_scores, kg_data=kg_data, entities=entities)
     elif 'username' in session:
         return render_template('summarizer.html', username=session['username'])
     else:

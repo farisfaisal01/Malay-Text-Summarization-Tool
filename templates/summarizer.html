@@ -17,7 +17,7 @@ Perumus
                             <p>{{ summary }}</p>
                         </div>
                     </div>
-                    {% if word_scores or kg_data %}
+                    {% if word_scores or kg_data or entities %}
                         <div class="mt-3">
                             <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#additionalInfo" aria-expanded="false" aria-controls="additionalInfo">
                                 Info Tambahan
@@ -37,6 +37,19 @@ Perumus
                                         {% for image in kg_data %}
                                             <img src="data:image/png;base64,{{ image }}" class="img-fluid mb-3" alt="Knowledge Graph">
                                         {% endfor %}
+                                    {% endif %}
+                                    {% if entities %}
+                                        <h5>Entiti yang Dikenali:</h5>
+                                        <ul>
+                                            {% for entity_type, entity_list in entities.items() %}
+                                                <li>{{ entity_type }}:</li>
+                                                <ul>
+                                                    {% for entity in entity_list %}
+                                                        <li>{{ entity }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endfor %}
+                                        </ul>
                                     {% endif %}
                                 </div>
                             </div>
@@ -104,6 +117,19 @@ Perumus
                                         {% for image in kg_data %}
                                             <img src="data:image/png;base64,{{ image }}" class="img-fluid mb-3" alt="Knowledge Graph">
                                         {% endfor %}
+                                    {% endif %}
+                                    {% if entities %}
+                                        <h5>Entiti yang Dikenali:</h5>
+                                        <ul>
+                                            {% for entity_type, entity_list in entities.items() %}
+                                                <li>{{ entity_type }}:</li>
+                                                <ul>
+                                                    {% for entity in entity_list %}
+                                                        <li>{{ entity }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endfor %}
+                                        </ul>
                                     {% endif %}
                                 </div>
                             </div>
