@@ -11,22 +11,17 @@ from models import User, Summary, init_db
 from flask_migrate import Migrate
 from models import db
 # from fpdf import FPDF
-from docx import Document
 # import io
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
-from reportlab.lib import utils
-from io import BytesIO
 from werkzeug.utils import secure_filename
 import os
-import fitz
-import networkx as nx
 import matplotlib
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 import base64
-# import pandas as pd
+
+# Import the separated functions
+from export_pdf_word_txt import export_pdf, export_word, export_txt
+from upload_file import allowed_file, extract_text_from_file
+from summarization_text_to_kg import generate_knowledge_graph_images
 
 # Initialize the extractive summarization model
 stopwords = malaya.text.function.get_stopwords()
@@ -249,47 +244,6 @@ def export():
     else:
         return "Invalid format", 400
 
-def export_pdf(text, date):
-    buffer = BytesIO()
-    p = canvas.Canvas(buffer, pagesize=letter)
-    width, height = letter
-
-    margin = inch
-    text_width = width - 2 * margin
-    textobject = p.beginText(margin, height - margin)
-    textobject.setFont("Helvetica", 12)
-    textobject.textLines(wrap_text(f"Summary Date: {date}\nSummary Content:\n{text}", text_width))
-    p.drawText(textobject)
-    p.showPage()
-    p.save()
-    buffer.seek(0)
-    return send_file(buffer, as_attachment=True, download_name='summary.pdf', mimetype='application/pdf')
-
-def wrap_text(text, max_width):
-    lines = text.splitlines()
-    wrapped_lines = []
-    for line in lines:
-        wrapped_lines.extend(utils.simpleSplit(line, "Helvetica", 12, max_width))
-    return wrapped_lines
-
-def export_word(text, date):
-    buffer = BytesIO()
-    doc = Document()
-    doc.add_heading('Summary Details', level=1)
-    doc.add_paragraph(f"Summary Date: {date}")
-    doc.add_paragraph("Summary Content:")
-    doc.add_paragraph(text)
-    doc.save(buffer)
-    buffer.seek(0)
-    return send_file(buffer, as_attachment=True, download_name='summary.docx', mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-
-def export_txt(text, date):
-    buffer = BytesIO()
-    content = f"Summary Date: {date}\nSummary Content:\n{text}"
-    buffer.write(content.encode('utf-8'))
-    buffer.seek(0)
-    return send_file(buffer, as_attachment=True, download_name='summary.txt', mimetype='text/plain')
-
 @app.route('/upload_file', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -310,57 +264,6 @@ def upload_file():
 
         return jsonify({'success': True, 'text': text})
     return jsonify({'success': False, 'message': 'Invalid file format'})
-
-def allowed_file(filename):
-    ALLOWED_EXTENSIONS = {'pdf', 'docx', 'txt'}
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-def extract_text_from_file(file_path):
-    file_extension = file_path.rsplit('.', 1)[1].lower()
-    if file_extension == 'pdf':
-        return extract_text_from_pdf(file_path)
-    elif file_extension == 'docx':
-        return extract_text_from_docx(file_path)
-    elif file_extension == 'txt':
-        return extract_text_from_txt(file_path)
-    return ''
-
-def extract_text_from_pdf(file_path):
-    text = ""
-    with fitz.open(file_path) as doc:
-        for page in doc:
-            text += page.get_text()
-    return text
-
-def extract_text_from_docx(file_path):
-    from docx import Document
-    doc = Document(file_path)
-    full_text = []
-    for para in doc.paragraphs:
-        full_text.append(para.text)
-    return '\n'.join(full_text)
-
-def extract_text_from_txt(file_path):
-    with open(file_path, 'r', encoding='utf-8') as f:
-        return f.read()
-    
-def generate_knowledge_graph_images(kg_result):
-    images = []
-    for result in kg_result:
-        graph = result.get('G')
-        if graph is not None:
-            plt.figure(figsize=(6, 6))
-            pos = nx.spring_layout(graph)
-            nx.draw(graph, with_labels=True, node_color='skyblue', edge_cmap=plt.cm.Blues, pos=pos)
-            nx.draw_networkx_edge_labels(graph, pos=pos)
-            
-            buffer = BytesIO()
-            plt.savefig(buffer, format='png')
-            buffer.seek(0)
-            image_base64 = base64.b64encode(buffer.read()).decode('utf-8')
-            images.append(image_base64)
-            plt.close()
-    return images
 
 if __name__ == "__main__":
     app.run(debug=True)
