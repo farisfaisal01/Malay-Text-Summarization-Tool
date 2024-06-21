@@ -21,13 +21,12 @@ from io import BytesIO
 from werkzeug.utils import secure_filename
 import os
 import fitz
-
 import networkx as nx
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import base64
-import pandas as pd
+# import pandas as pd
 
 # Initialize the extractive summarization model
 stopwords = malaya.text.function.get_stopwords()
@@ -142,7 +141,7 @@ def summarizer():
             word_scores = sorted(r['score'], key=lambda item: item[1], reverse=True)[:20]
         
         # Generate the knowledge graph
-        kg_result = kg_model.generate([cleaned_text, cleaned_text], max_length=256)  # Adjusted to generate two graphs for demonstration
+        kg_result = kg_model.generate([summary_text], max_length=256)  # Adjusted to generate two graphs for demonstration
         kg_data = generate_knowledge_graph_images(kg_result)
 
         if 'username' in session:
