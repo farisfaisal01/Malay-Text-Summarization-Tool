@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='site.css')}}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        .navbar-nav .dropdown-menu {
+            left: auto;
+            right: 0;
+        }
+
+        /* Custom styles for navbar */
+        .navbar {
+            background-color: #8eb4d7 !important;
+            border-bottom: 1px solid #e7e7e7;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .nav-link {
+            color: #343a40 !important;
+            font-weight: 500;
+            transition: color 0.3s ease-in-out;
+        }
+        
+        .nav-link:hover {
+            color: #007bff !important;
+        }
+
+        .dropdown-menu {
+            border-radius: 0;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #83a5c5;
+        }
+
+        .dropdown-item:hover {
+            background-color: #6f8ca8;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        .fade-out {
+            animation: fadeOut 0.2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <ul class="navbar-nav w-100 justify-content-between">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('home') }}">MTST</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('summarizer') }}">Perumus</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('history') }}">Sejarah Rumusan</a>
+                </li>
+                {% if 'username' in session %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" aria-haspopup="true" aria-expanded="false">
+                        {{ session['username'] }}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" id="navbarDropdownMenu">
+                        <a class="dropdown-item" href="{{ url_for('account_settings') }}">Tetapan Akaun</a>
+                        <a class="dropdown-item" href="{{ url_for('logout') }}">Log Keluar</a>
+                    </div>                    
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}">Log Masuk</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('register') }}">Daftar</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDzwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            $('.list-group-item').hover(function() {
+                $(this).css('background-color', '#e2e6ea');
+                $(this).css('transform', 'translateY(-3px)');
+            }, function() {
+                $(this).css('background-color', '#f8f9fa');
+                $(this).css('transform', 'translateY(0)');
+            });
+
+            // Dropdown toggle functionality with animations
+            $('#navbarDropdownMenuLink').on('click', function(event) {
+                event.stopPropagation();
+                var $dropdownMenu = $('#navbarDropdownMenu');
+                if ($dropdownMenu.hasClass('show')) {
+                    $dropdownMenu.removeClass('fade-in').addClass('fade-out');
+                    setTimeout(function() {
+                        $dropdownMenu.removeClass('show fade-out');
+                    }, 200); // Match the duration of the fade-out animation
+                } else {
+                    $dropdownMenu.addClass('show fade-in');
+                }
+            });
+
+            // Close the dropdown if the user clicks outside of it
+            $(document).on('click', function(event) {
+                var $dropdownMenu = $('#navbarDropdownMenu');
+                if (!$(event.target).closest('#navbarDropdownMenuLink').length) {
+                    if ($dropdownMenu.hasClass('show')) {
+                        $dropdownMenu.removeClass('fade-in').addClass('fade-out');
+                        setTimeout(function() {
+                            $dropdownMenu.removeClass('show fade-out');
+                        }, 200); // Match the duration of the fade-out animation
+                    }
+                }
+            });
+
+            // Prevent flickering on dropdown reopen
+            $('.dropdown-menu').on('click', function(event) {
+                event.stopPropagation();
+            });
+        });
+    </script>
+</body>
+</html>

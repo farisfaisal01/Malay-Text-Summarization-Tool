@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Sejarah Rumusan
+{% endblock %}
+
+{% block content %}
+    <div class="container p-5">
+        <h1 class="text-primary">Pilih Profil</h1>
+        <br>
+        <div class="list-group">
+            {% for user in users|reverse %}
+                <a href="{{ url_for('history_user', user_id=user.userID) }}" class="list-group-item list-group-item-action">
+                    <strong>{{ user.userName }}</strong> ({{ user.userEmail }})
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="container mt-5">
+    </div>
+{% endblock %}

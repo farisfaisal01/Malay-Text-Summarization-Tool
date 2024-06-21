@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block title %}
+MTST
+{% endblock %}
+
+{% block content %}
+    <div class="container p-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h1 class="font-weight-bold text-primary">MALAY TEXT SUMMARIZATION TOOL</h1>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8 text-center">
+                {% if username %}
+                    <h3 class="font-weight-bold text-info">Selamat Datang, {{ username }}!</h3>
+                {% else %}
+                    <h4 class="font-weight-bold text-info"><a href="{{ url_for('login') }}" class="hover-link">TEKAN UNTUK LOG IN</a></h4>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8">
+                <div class="card custom-card">
+                    <div class="card-body">
+                        <p class="card-text text-muted">
+                            Malay Text Summarizer Tool ialah laman web mesra pengguna yang menggunakan pemprosesan bahasa semula jadi yang termaju algoritma untuk menghasilkan ringkasan teks Melayu yang padat dan bermakna. Ia memekatkan laluan yang panjang, mengekstrak maklumat penting, dan menyediakan ringkasan yang cekap dan tepat kepada pengguna, menjadikannya tidak ternilai sumber untuk individu dan organisasi yang berurusan dengan kandungan bahasa Melayu. Dengan pilihan yang boleh disesuaikan dan ciri tambahan, alat ini memperkemas proses mengekstrak maklumat penting, menjimatkan masa dan usaha di samping menggalakkan komunikasi yang berkesan dalam bahasa Melayu.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-4 text-center">
+                <a href="{{ url_for('summarizer') }}" class="btn btn-primary btn-lg hover-btn">RINGKASKAN</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+    </div>
+{% endblock %}

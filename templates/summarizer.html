@@ -1,0 +1,179 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Perumus
+{% endblock %}
+
+{% block content %}
+<div class="container p-5">
+    {% if username %}
+        {% if text %}
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <h2 class="text-center text-primary">Teks Ringkas:</h2>
+                    <br>
+                    <div class="card custom-card">
+                        <div class="card-body">
+                            <p>{{ summary }}</p>
+                        </div>
+                    </div>
+                    {% if word_scores or sentiment_prediction %}
+                        <div class="mt-3">
+                            <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#additionalInfo" aria-expanded="false" aria-controls="additionalInfo">
+                                Info Tambahan
+                            </button>
+                            <div class="collapse mt-2" id="additionalInfo">
+                                <div class="card card-body">
+                                    {% if word_scores %}
+                                        <h5>Skor Perkataan:</h5>
+                                        <ul>
+                                            {% for word, score in word_scores %}
+                                                <li>{{ word }}: {{ score }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                    {% if sentiment_prediction %}
+                                        <h5>Sentimen:</h5>
+                                        <p>Prediction: {{ sentiment_prediction }}</p>
+                                        <p>Probabilities:</p>
+                                        <ul>
+                                            {% for label, proba in sentiment_proba.items() %}
+                                                <li>{{ label }}: {{ proba }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <form method="POST" action="{{ url_for('summarizer') }}" enctype="multipart/form-data">
+                        <h2 class="text-center text-primary">Teks Asal:</h2>
+                        <br>
+                        <textarea id="rawtext" name="rawtext" cols="3" rows="5" class="form-control" required placeholder="Teks input..."></textarea>
+                        <br>
+                        <div class="form-group">
+                            <label for="summary_type">Jenis Ringkasan:</label>
+                            <select id="summary_type" name="summary_type" class="form-control" onchange="toggleKeywordInput()">
+                                <option value="abstractive">Abstraktif</option>
+                                <option value="extractive">Ekstraktif</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="keyword_group" style="display:none;">
+                            <label for="keyword">Kata Kunci (Pilihan):</label>
+                            <input type="text" id="keyword" name="keyword" class="form-control" placeholder="Masukkan kata kunci">
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-secondary clear-btn" type="reset">Padam</button>
+                            <button class="btn btn-primary hover-btn" type="submit">Ringkaskan</button>
+                        </div>
+                        <label for="fileUpload" class="btn btn-primary">Upload File</label>
+                        <input type="file" id="fileUpload" name="file" style="display: none;" onchange="handleFileUpload()">
+                    </form>                                     
+                </div>
+            </div>
+        {% endif %}
+    {% else %}
+        {% if text %}
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <h2 class="text-center text-primary">Teks Ringkas:</h2>
+                    <br>
+                    <div class="card custom-card">
+                        <div class="card-body">
+                            <p>{{ summary }}</p>
+                        </div>
+                    </div>
+                    {% if word_scores or sentiment_prediction %}
+                        <div class="mt-3">
+                            <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#additionalInfo" aria-expanded="false" aria-controls="additionalInfo">
+                                Info Tambahan
+                            </button>
+                            <div class="collapse mt-2" id="additionalInfo">
+                                <div class="card card-body">
+                                    {% if word_scores %}
+                                        <h5>Skor Perkataan:</h5>
+                                        <ul>
+                                            {% for word, score in word_scores %}
+                                                <li>{{ word }}: {{ score }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                    {% if sentiment_prediction %}
+                                        <h5>Sentimen:</h5>
+                                        <p>Prediction: {{ sentiment_prediction }}</p>
+                                        <p>Probabilities:</p>
+                                        <ul>
+                                            {% for label, proba in sentiment_proba.items() %}
+                                                <li>{{ label }}: {{ proba }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <form method="POST" action="{{ url_for('summarizer') }}" enctype="multipart/form-data">
+                        <h2 class="text-center text-primary">Teks Asal:</h2>
+                        <br>
+                        <textarea id="rawtext" name="rawtext" cols="3" rows="5" class="form-control" required placeholder="Teks input..." maxlength="300"></textarea>
+                        <small class="form-text text-muted">Sila ambil perhatian: Pengguna yang tidak log masuk hanya boleh memasukkan 300 aksara.</small>
+                        <br>
+                        <div class="text-center">
+                            <button class="btn btn-secondary clear-btn" type="reset">Padam</button>
+                            <button class="btn btn-primary hover-btn" type="submit">Ringkaskan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+<div class="container mt-5">
+</div>
+
+<script>
+    function handleFileUpload() {
+        const fileInput = document.getElementById('fileUpload');
+        const file = fileInput.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/upload_file', {  // Replace with your actual endpoint
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('rawtext').value = data.text;
+                } else {
+                    alert('Failed to extract text from file.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    }
+
+    function toggleKeywordInput() {
+        const summaryType = document.getElementById('summary_type').value;
+        const keywordGroup = document.getElementById('keyword_group');
+        if (summaryType === 'extractive') {
+            keywordGroup.style.display = 'block';
+        } else {
+            keywordGroup.style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}

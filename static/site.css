@@ -1,0 +1,203 @@
+/* General styling for the page */
+body {
+    background-color: #d5eaff !important;
+    color: #333;
+    font-family: Georgia, serif !important;
+}
+
+textarea {
+    height: 250px !important;
+}
+
+.container {
+    background-color: #fff;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #007bff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+p, span, label, .nav-link, .dropdown-item, .btn, .list-group-item, .alert-danger {
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    padding: 40px;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.form-group input {
+    border-radius: 20px;
+}
+
+/* Custom styles for home page */
+.text-info {
+    color: #17a2b8 !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.custom-card {
+    background-color: #fff;
+    border: 1px solid #e7e7e7;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.custom-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.hover-link {
+    color: #007bff;
+    transition: color 0.3s ease-in-out;
+}
+
+.hover-link:hover {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+.hover-btn {
+    background-color: #007bff;
+    border: none;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.hover-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px);
+}
+
+/*styling for navigation bar*/
+.navbar {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e7e7e7;
+    transition: all 0.3s ease-in-out;
+}
+
+.nav-link {
+    color: #343a40 !important;
+    font-weight: 500;
+    transition: color 0.3s ease-in-out;
+}
+
+.nav-link:hover {
+    color: #007bff !important;
+}
+
+.dropdown-menu {
+    border-radius: 0;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* Custom styles for summarizer page */
+.text-primary {
+    color: #007bff !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.hover-btn {
+    background-color: #007bff;
+    border: none;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.hover-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px);
+}
+
+.clear-btn {
+    background-color: #6c757d;
+    border: none;
+    transition: transform 0.3s ease-in-out;
+}
+
+.clear-btn:hover {
+    background-color: #6c757d; /* Keep the same background color on hover */
+    transform: translateY(-3px);
+}
+
+/* Styling for the list items */
+.list-group-item {
+    background-color: white !important;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.list-group-item:hover {
+    background-color: #e2e6ea !important;
+    transform: translateY(-3px);
+}
+
+/* Button styling */
+.btn {
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    transform: translateY(-3px);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #5a6268;
+    transform: translateY(-3px);
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal styling */
+.modal-content {
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+/* Hover effects for modal buttons */
+.modal-body .btn {
+    margin: 5px;
+}
+
+/* Responsive text */
+#summary-text, #summary-date {
+    display: block;
+    word-wrap: break-word;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}

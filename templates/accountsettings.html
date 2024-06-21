@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Tetapan Akaun
+{% endblock %}
+
+{% block content %}
+    <div class="container p-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card mt-5">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Tetapan Akaun</h2>
+                        
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <div class="alert alert-info" role="alert">
+                                    <ul class="mb-0">
+                                        {% for message in messages %}
+                                            <li>{{ message }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+                        
+                        <form method="POST" action="{{ url_for('account_settings') }}">
+                            <div class="form-group">
+                                <label for="email">E-mel:</label>
+                                <input type="email" id="email" name="email" class="form-control" value="{{ user.email }}" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="old_password">Kata Laluan Lama:</label>
+                                <input type="password" id="old_password" name="old_password" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="new_password">Kata Laluan Baru:</label>
+                                <input type="password" id="new_password" name="new_password" class="form-control">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="confirm_new_password">Pengesahan Kata Laluan Baru:</label>
+                                <input type="password" id="confirm_new_password" name="confirm_new_password" class="form-control">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-block mt-4">Kemas Kini</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+    </div>
+{% endblock %}
