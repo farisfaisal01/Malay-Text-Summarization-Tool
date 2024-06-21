@@ -17,7 +17,7 @@ Perumus
                             <p>{{ summary }}</p>
                         </div>
                     </div>
-                    {% if word_scores or sentiment_prediction %}
+                    {% if word_scores or kg_data %}
                         <div class="mt-3">
                             <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#additionalInfo" aria-expanded="false" aria-controls="additionalInfo">
                                 Info Tambahan
@@ -32,15 +32,11 @@ Perumus
                                             {% endfor %}
                                         </ul>
                                     {% endif %}
-                                    {% if sentiment_prediction %}
-                                        <h5>Sentimen:</h5>
-                                        <p>Prediction: {{ sentiment_prediction }}</p>
-                                        <p>Probabilities:</p>
-                                        <ul>
-                                            {% for label, proba in sentiment_proba.items() %}
-                                                <li>{{ label }}: {{ proba }}</li>
-                                            {% endfor %}
-                                        </ul>
+                                    {% if kg_data %}
+                                        <h5>Knowledge Graph:</h5>
+                                        {% for image in kg_data %}
+                                            <img src="data:image/png;base64,{{ image }}" class="img-fluid mb-3" alt="Knowledge Graph">
+                                        {% endfor %}
                                     {% endif %}
                                 </div>
                             </div>
@@ -88,7 +84,7 @@ Perumus
                             <p>{{ summary }}</p>
                         </div>
                     </div>
-                    {% if word_scores or sentiment_prediction %}
+                    {% if word_scores %}
                         <div class="mt-3">
                             <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#additionalInfo" aria-expanded="false" aria-controls="additionalInfo">
                                 Info Tambahan
@@ -103,15 +99,11 @@ Perumus
                                             {% endfor %}
                                         </ul>
                                     {% endif %}
-                                    {% if sentiment_prediction %}
-                                        <h5>Sentimen:</h5>
-                                        <p>Prediction: {{ sentiment_prediction }}</p>
-                                        <p>Probabilities:</p>
-                                        <ul>
-                                            {% for label, proba in sentiment_proba.items() %}
-                                                <li>{{ label }}: {{ proba }}</li>
-                                            {% endfor %}
-                                        </ul>
+                                    {% if kg_data %}
+                                        <h5>Knowledge Graph:</h5>
+                                        {% for image in kg_data %}
+                                            <img src="data:image/png;base64,{{ image }}" class="img-fluid mb-3" alt="Knowledge Graph">
+                                        {% endfor %}
                                     {% endif %}
                                 </div>
                             </div>

@@ -22,6 +22,13 @@ from werkzeug.utils import secure_filename
 import os
 import fitz
 
+import networkx as nx
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import base64
+import pandas as pd
+
 # Initialize the extractive summarization model
 stopwords = malaya.text.function.get_stopwords()
 vectorizer = SkipGramCountVectorizer(
@@ -37,6 +44,9 @@ extractive_model = malaya.summarization.extractive.sklearn(svd, vectorizer)
 # Initialize the abstractive summarization model
 abstractive_model = malaya.summarization.abstractive.huggingface()
 model_base = malaya.summarization.abstractive.huggingface(model='mesolitica/finetune-summarization-t5-base-standard-bahasa-cased')
+
+# Load the knowledge graph model
+kg_model = malaya.knowledge_graph.huggingface()
 
 app = Flask(__name__)
 app.secret_key = "your-secret-key"
@@ -117,8 +127,7 @@ def summarizer():
         cleaned_text = cleaning(rawtext)
         
         word_scores = None
-        sentiment_prediction = None
-        sentiment_proba = None
+        kg_data = None  # Initialize the knowledge graph data variable
         
         if summary_type == 'abstractive':
             summary = abstractive_model.generate([cleaned_text], max_length=256, temperature=0.5)
@@ -131,6 +140,10 @@ def summarizer():
                 r = extractive_model.sentence_level(sentences)
             summary_text = r['summary']
             word_scores = sorted(r['score'], key=lambda item: item[1], reverse=True)[:20]
+        
+        # Generate the knowledge graph
+        kg_result = kg_model.generate([cleaned_text, cleaned_text], max_length=256)  # Adjusted to generate two graphs for demonstration
+        kg_data = generate_knowledge_graph_images(kg_result)
 
         if 'username' in session:
             cur = mysql.connection.cursor()
@@ -138,9 +151,9 @@ def summarizer():
                         (session['userid'], summary_text, datetime.utcnow()))
             mysql.connection.commit()
             cur.close()
-            return render_template('summarizer.html', username=session['username'], text=rawtext, summary=summary_text, word_scores=word_scores)
+            return render_template('summarizer.html', username=session['username'], text=rawtext, summary=summary_text, word_scores=word_scores, kg_data=kg_data)
         else:
-            return render_template('summarizer.html', text=rawtext, summary=summary_text, word_scores=word_scores)
+            return render_template('summarizer.html', text=rawtext, summary=summary_text, word_scores=word_scores, kg_data=kg_data)
     elif 'username' in session:
         return render_template('summarizer.html', username=session['username'])
     else:
@@ -331,6 +344,24 @@ def extract_text_from_docx(file_path):
 def extract_text_from_txt(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         return f.read()
+    
+def generate_knowledge_graph_images(kg_result):
+    images = []
+    for result in kg_result:
+        graph = result.get('G')
+        if graph is not None:
+            plt.figure(figsize=(6, 6))
+            pos = nx.spring_layout(graph)
+            nx.draw(graph, with_labels=True, node_color='skyblue', edge_cmap=plt.cm.Blues, pos=pos)
+            nx.draw_networkx_edge_labels(graph, pos=pos)
+            
+            buffer = BytesIO()
+            plt.savefig(buffer, format='png')
+            buffer.seek(0)
+            image_base64 = base64.b64encode(buffer.read()).decode('utf-8')
+            images.append(image_base64)
+            plt.close()
+    return images
 
 if __name__ == "__main__":
     app.run(debug=True)
