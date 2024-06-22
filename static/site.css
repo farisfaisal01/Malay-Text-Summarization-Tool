@@ -1,203 +1,204 @@
 /* General styling for the page */
 body {
-    background-color: #d5eaff !important;
-    color: #333;
-    font-family: Georgia, serif !important;
+    background-color: #d5eaff !important; /* Light blue background for the page */
+    color: #333; /* Dark grey text color */
+    font-family: Georgia, serif !important; /* Georgia font for all text */
 }
 
 textarea {
-    height: 250px !important;
+    height: 250px !important; /* Fixed height for text areas */
 }
 
 .container {
-    background-color: #fff;
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+    background-color: #fff; /* White background for containers */
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1); /* Soft shadow around containers */
 }
 
 h1 {
-    color: #007bff;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    color: #007bff; /* Blue color for headings */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Light shadow for text */
 }
 
 p, span, label, .nav-link, .dropdown-item, .btn, .list-group-item, .alert-danger {
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Light shadow for various elements */
 }
 
 .card {
-    border: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none; /* Remove border from cards */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for cards */
 }
 
 .card-body {
-    padding: 40px;
+    padding: 40px; /* Padding for card content */
 }
 
 .form-group label {
-    font-weight: bold;
+    font-weight: bold; /* Bold labels in forms */
 }
 
 .form-group input {
-    border-radius: 20px;
+    border-radius: 20px; /* Rounded corners for form inputs */
 }
 
 /* Custom styles for home page */
 .text-info {
-    color: #17a2b8 !important;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    color: #17a2b8 !important; /* Blue color for informational text */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Light shadow for text */
 }
 
 .custom-card {
-    background-color: #fff;
-    border: 1px solid #e7e7e7;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    background-color: #fff; /* White background for custom cards */
+    border: 1px solid #e7e7e7; /* Light grey border for custom cards */
+    border-radius: 10px; /* Rounded corners for custom cards */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for custom cards */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transition effects */
 }
 
 .custom-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px); /* Move card up slightly on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
 }
 
 .hover-link {
-    color: #007bff;
-    transition: color 0.3s ease-in-out;
+    color: #007bff; /* Blue color for hover links */
+    transition: color 0.3s ease-in-out; /* Smooth color transition */
 }
 
 .hover-link:hover {
-    color: #0056b3;
-    text-decoration: none;
+    color: #0056b3; /* Darker blue on hover */
+    text-decoration: none; /* Remove underline on hover */
 }
 
 .hover-btn {
-    background-color: #007bff;
-    border: none;
-    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    background-color: #007bff; /* Blue background for buttons */
+    border: none; /* Remove border */
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out; /* Smooth transition effects */
 }
 
 .hover-btn:hover {
-    background-color: #0056b3;
-    transform: translateY(-3px);
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-3px); /* Move button up slightly on hover */
 }
 
-/*styling for navigation bar*/
+/* Styling for navigation bar */
 .navbar {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #e7e7e7;
-    transition: all 0.3s ease-in-out;
+    background-color: #f8f9fa; /* Light grey background for navbar */
+    border-bottom: 1px solid #e7e7e7; /* Light grey bottom border */
+    transition: all 0.3s ease-in-out; /* Smooth transition for all properties */
 }
 
 .nav-link {
-    color: #343a40 !important;
-    font-weight: 500;
-    transition: color 0.3s ease-in-out;
+    color: #343a40 !important; /* Dark grey color for navbar links */
+    font-weight: 500; /* Medium weight for navbar links */
+    transition: color 0.3s ease-in-out; /* Smooth color transition */
 }
 
 .nav-link:hover {
-    color: #007bff !important;
+    color: #007bff !important; /* Blue color on hover */
 }
 
 .dropdown-menu {
-    border-radius: 0;
-    border: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease-in-out;
+    border-radius: 0; /* Remove border radius */
+    border: none; /* Remove border */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for dropdown */
+    transition: all 0.3s ease-in-out; /* Smooth transition for all properties */
 }
 
 .dropdown-item:hover {
-    background-color: #f8f9fa;
+    background-color: #f8f9fa; /* Light grey background on hover */
 }
 
 /* Custom styles for summarizer page */
 .text-primary {
-    color: #007bff !important;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    color: #007bff !important; /* Blue color for primary text */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Light shadow for text */
 }
 
+/* Button styles */
 .hover-btn {
-    background-color: #007bff;
-    border: none;
-    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    background-color: #007bff; /* Blue background for buttons */
+    border: none; /* Remove border */
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out; /* Smooth transition effects */
 }
 
 .hover-btn:hover {
-    background-color: #0056b3;
-    transform: translateY(-3px);
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-3px); /* Move button up slightly on hover */
 }
 
 .clear-btn {
-    background-color: #6c757d;
-    border: none;
-    transition: transform 0.3s ease-in-out;
+    background-color: #6c757d; /* Grey background for clear buttons */
+    border: none; /* Remove border */
+    transition: transform 0.3s ease-in-out; /* Smooth transform transition */
 }
 
 .clear-btn:hover {
     background-color: #6c757d; /* Keep the same background color on hover */
-    transform: translateY(-3px);
+    transform: translateY(-3px); /* Move button up slightly on hover */
 }
 
 /* Styling for the list items */
 .list-group-item {
-    background-color: white !important;
-    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    background-color: white !important; /* White background for list items */
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out; /* Smooth transition effects */
 }
 
 .list-group-item:hover {
-    background-color: #e2e6ea !important;
-    transform: translateY(-3px);
+    background-color: #e2e6ea !important; /* Light grey background on hover */
+    transform: translateY(-3px); /* Move list item up slightly on hover */
 }
 
 /* Button styling */
 .btn {
-    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out; /* Smooth transition effects */
 }
 
 .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: #fff;
+    background-color: #007bff; /* Blue background for primary buttons */
+    border-color: #007bff; /* Blue border for primary buttons */
+    color: #fff; /* White text color for primary buttons */
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
-    transform: translateY(-3px);
+    background-color: #0056b3; /* Darker blue on hover */
+    border-color: #0056b3; /* Darker blue border on hover */
+    transform: translateY(-3px); /* Move button up slightly on hover */
 }
 
 .btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
-    color: #fff;
+    background-color: #6c757d; /* Grey background for secondary buttons */
+    border-color: #6c757d; /* Grey border for secondary buttons */
+    color: #fff; /* White text color for secondary buttons */
 }
 
 .btn-secondary:hover {
-    background-color: #5a6268;
-    border-color: #5a6268;
-    transform: translateY(-3px);
+    background-color: #5a6268; /* Darker grey on hover */
+    border-color: #5a6268; /* Darker grey border on hover */
+    transform: translateY(-3px); /* Move button up slightly on hover */
 }
 
 .alert-danger {
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-    color: #721c24;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    background-color: #f8d7da; /* Light red background for danger alerts */
+    border-color: #f5c6cb; /* Light red border for danger alerts */
+    color: #721c24; /* Dark red text color for danger alerts */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Light shadow for text */
 }
 
 /* Modal styling */
 .modal-content {
-    border-radius: 10px;
-    padding: 20px;
-    background-color: #f8f9fa;
+    border-radius: 10px; /* Rounded corners for modal content */
+    padding: 20px; /* Padding for modal content */
+    background-color: #f8f9fa; /* Light grey background for modal content */
 }
 
 /* Hover effects for modal buttons */
 .modal-body .btn {
-    margin: 5px;
+    margin: 5px; /* Margin for modal buttons */
 }
 
 /* Responsive text */
 #summary-text, #summary-date {
-    display: block;
-    word-wrap: break-word;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    display: block; /* Block display for summary text and date */
+    word-wrap: break-word; /* Wrap long words */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Light shadow for text */
 }
