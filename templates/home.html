@@ -6,11 +6,14 @@ MTST
 
 {% block content %}
     <div class="container p-5">
+        <!-- Header section -->
         <div class="row justify-content-center">
             <div class="col-md-8 text-center">
                 <h1 class="font-weight-bold text-primary">MALAY TEXT SUMMARIZATION TOOL</h1>
             </div>
         </div>
+
+        <!-- Welcome message or login prompt -->
         <div class="row justify-content-center mt-5">
             <div class="col-md-8 text-center">
                 {% if username %}
@@ -20,6 +23,8 @@ MTST
                 {% endif %}
             </div>
         </div>
+
+        <!-- Tool description -->
         <div class="row justify-content-center mt-5">
             <div class="col-md-8">
                 <div class="card custom-card">
@@ -31,6 +36,8 @@ MTST
                 </div>
             </div>
         </div>
+
+        <!-- Summarize button -->
         <div class="row justify-content-center mt-5">
             <div class="col-md-4 text-center">
                 <a href="{{ url_for('summarizer') }}" class="btn btn-primary btn-lg hover-btn">RINGKASKAN</a>
@@ -38,6 +45,7 @@ MTST
         </div>
     </div>
 
+    <!-- Additional container for spacing -->
     <div class="container mt-5">
     </div>
 {% endblock %}

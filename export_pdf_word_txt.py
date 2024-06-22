@@ -7,6 +7,7 @@ from reportlab.lib import utils
 from docx import Document
 
 def export_pdf(text, date):
+    """Generates a PDF file with the given text and date."""
     buffer = BytesIO()
     p = canvas.Canvas(buffer, pagesize=letter)
     width, height = letter
@@ -23,6 +24,7 @@ def export_pdf(text, date):
     return send_file(buffer, as_attachment=True, download_name='summary.pdf', mimetype='application/pdf')
 
 def wrap_text(text, max_width):
+    """Wraps the text to fit within the specified max width."""
     lines = text.splitlines()
     wrapped_lines = []
     for line in lines:
@@ -30,6 +32,7 @@ def wrap_text(text, max_width):
     return wrapped_lines
 
 def export_word(text, date):
+    """Generates a Word document with the given text and date."""
     buffer = BytesIO()
     doc = Document()
     doc.add_heading('Summary Details', level=1)
@@ -41,6 +44,7 @@ def export_word(text, date):
     return send_file(buffer, as_attachment=True, download_name='summary.docx', mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
 
 def export_txt(text, date):
+    """Generates a text file with the given text and date."""
     buffer = BytesIO()
     content = f"Summary Date: {date}\nSummary Content:\n{text}"
     buffer.write(content.encode('utf-8'))

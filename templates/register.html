@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "layout.html' %}
 
 {% block title %}
 Pendaftaran
@@ -12,6 +12,7 @@ Pendaftaran
                     <div class="card-body">
                         <h1 class="text-center mb-4">Pendaftaran Akaun</h1>
                         
+                        <!-- Registration form -->
                         <form method="POST" action="{{ url_for('register') }}" class="form-signin">
                             <div class="form-group">
                                 <input type="text" id="username" name="username" class="form-control" required placeholder="Nama Pengguna">
@@ -30,6 +31,7 @@ Pendaftaran
         </div>
     </div>
 
+    <!-- Additional container for spacing -->
     <div class="container mt-5">
     </div>
 {% endblock %}

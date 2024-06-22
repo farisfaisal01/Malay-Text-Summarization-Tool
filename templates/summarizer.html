@@ -8,6 +8,7 @@ Perumus
 <div class="container p-5">
     {% if username %}
         {% if text %}
+            <!-- Display the summarized text -->
             <div class="row">
                 <div class="col-md-8 offset-md-2">
                     <h3 class="text-center text-primary">Teks Ringkas:</h3>
@@ -16,6 +17,7 @@ Perumus
                             <p>{{ summary }}</p>
                         </div>
                     </div>
+                    <!-- Display additional info if available -->
                     {% if word_scores or kg_data or entities %}
                         <div class="mt-3">
                             <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#additionalInfo" aria-expanded="false" aria-controls="additionalInfo">
@@ -57,6 +59,7 @@ Perumus
                 </div>
             </div>
         {% else %}
+            <!-- Display the text input form for logged-in users -->
             <div class="row">
                 <div class="col-md-8 offset-md-2">
                     <form method="POST" action="{{ url_for('summarizer') }}" enctype="multipart/form-data">
@@ -82,7 +85,7 @@ Perumus
                             <button class="btn btn-secondary clear-btn" type="reset">Padam</button>
                             <button class="btn btn-primary hover-btn" type="submit">Ringkaskan</button>
                         </div>
-                        <div class="text-right">
+                        <div class="text-right mt-2">
                             <label for="fileUpload" class="btn btn-primary">Upload File</label>
                             <input type="file" id="fileUpload" name="file" style="display: none;" onchange="handleFileUpload()">
                         </div>
@@ -92,6 +95,7 @@ Perumus
         {% endif %}
     {% else %}
         {% if text %}
+            <!-- Display the summarized text for non-logged-in users -->
             <div class="row">
                 <div class="col-md-8 offset-md-2">
                     <h3 class="text-center text-primary">Teks Ringkas:</h3>
@@ -103,6 +107,7 @@ Perumus
                 </div>
             </div>
         {% else %}
+            <!-- Display the text input form for non-logged-in users -->
             <div class="row">
                 <div class="col-md-8 offset-md-2">
                     <form method="POST" action="{{ url_for('summarizer') }}" enctype="multipart/form-data">
@@ -124,10 +129,12 @@ Perumus
     {% endif %}
 </div>
 
+<!-- Additional container for spacing -->
 <div class="container mt-5">
 </div>
 
 <script>
+    // Handle file upload and extract text
     function handleFileUpload() {
         const fileInput = document.getElementById('fileUpload');
         const file = fileInput.files[0];
@@ -144,13 +151,14 @@ Perumus
                 if (data.success) {
                     document.getElementById('rawtext').value = data.text;
                 } else {
-                    alert('Failed to extract text from file.');
+                    alert('Gagal untuk mengekstrak teks daripada fail.');
                 }
             })
             .catch(error => console.error('Error:', error));
         }
     }
 
+    // Toggle keyword input visibility based on summary type
     function toggleKeywordInput() {
         const summaryType = document.getElementById('summary_type').value;
         const keywordGroup = document.getElementById('keyword_group');

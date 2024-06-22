@@ -8,6 +8,7 @@ Sejarah Rumusan
     <div class="container p-5">
         <h1 class="text-primary">Pilih Profil</h1>
         <br>
+        <!-- User profiles list -->
         <div class="list-group">
             {% for user in users|reverse %}
                 <a href="{{ url_for('history_user', user_id=user.userID) }}" class="list-group-item list-group-item-action">
@@ -17,6 +18,7 @@ Sejarah Rumusan
         </div>
     </div>
 
+    <!-- Additional container for spacing -->
     <div class="container mt-5">
     </div>
 {% endblock %}

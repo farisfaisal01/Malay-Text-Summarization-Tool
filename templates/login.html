@@ -12,6 +12,7 @@ Login
                     <div class="card-body">
                         <h1 class="text-center mb-4">Log Masuk Akaun</h1>
     
+                        <!-- Display flash messages -->
                         {% with messages = get_flashed_messages() %}
                             {% if messages %}
                                 <div class="alert alert-danger" role="alert">
@@ -22,6 +23,7 @@ Login
                             {% endif %}
                         {% endwith %}
 
+                        <!-- Login form -->
                         <form method="POST" action="{{ url_for('login') }}" class="form-signin">
                             <div class="form-group">
                                 <input type="text" id="username" name="username" class="form-control" required placeholder="Nama Pengguna">
@@ -32,6 +34,7 @@ Login
                             <button type="submit" class="btn btn-primary btn-block">Log Masuk</button>
                         </form>
 
+                        <!-- Register link -->
                         <div class="text-center mt-3">
                             <a href="{{ url_for('register') }}">Tiada Akaun? Daftar Disini</a>
                         </div>
@@ -41,6 +44,7 @@ Login
         </div>
     </div>
 
+    <!-- Additional container for spacing -->
     <div class="container mt-5">
     </div>
 {% endblock %}
