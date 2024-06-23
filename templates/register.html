@@ -1,4 +1,4 @@
-{% extends "layout.html' %}
+{% extends "layout.html" %}
 
 {% block title %}
 Pendaftaran
@@ -6,12 +6,23 @@ Pendaftaran
 
 {% block content %}
     <div class="container p-5">
-        <div class="row justify-content-center mt-5">
+        <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
                         <h1 class="text-center mb-4">Pendaftaran Akaun</h1>
                         
+                        <!-- Display flash messages -->
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <div class="alert alert-danger" role="alert">
+                                    {% for message in messages %}
+                                        {{ message }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+
                         <!-- Registration form -->
                         <form method="POST" action="{{ url_for('register') }}" class="form-signin">
                             <div class="form-group">

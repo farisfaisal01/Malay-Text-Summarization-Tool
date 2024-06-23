@@ -35,14 +35,3 @@ def init_db(app):
     db.init_app(app)
     with app.app_context():
         db.create_all()
-
-# Example usage of the database initialization
-if __name__ == "__main__":
-    from flask import Flask
-
-    app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///example.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-    init_db(app)
-    print("Database initialized!")

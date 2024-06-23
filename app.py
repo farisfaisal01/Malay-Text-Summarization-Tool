@@ -74,11 +74,11 @@ def home():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
+        username_or_email = request.form['username']
         password = request.form['password']
 
         cur = mysql.connection.cursor()
-        cur.execute("SELECT userName, userPassword, userRole, userID FROM tbl_user WHERE userName = %s", (username,))
+        cur.execute("SELECT userName, userPassword, userRole, userID FROM tbl_user WHERE userName = %s OR userEmail = %s", (username_or_email, username_or_email))
         user = cur.fetchone()
         cur.close()
 
@@ -98,12 +98,39 @@ def register():
         email = request.form['email']
         password = request.form['password']
 
+        # Check if username already exists
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO tbl_user (userName, userEmail, userPassword, userRole) VALUES (%s, %s, %s, 'user')", (username, email, password))
+        cur.execute("SELECT * FROM tbl_user WHERE userName = %s", (username,))
+        user_by_username = cur.fetchone()
+
+        # Check if email already exists
+        cur.execute("SELECT * FROM tbl_user WHERE userEmail = %s", (email,))
+        user_by_email = cur.fetchone()
+        cur.close()
+
+        if user_by_username:
+            flash('Nama pengguna sudah wujud. Sila gunakan yang lain.')
+            return redirect(url_for('register'))
+
+        if user_by_email:
+            flash('E-mel sudah wujud. Sila gunakan yang lain.')
+            return redirect(url_for('register'))
+
+        # Check if the password meets the requirements
+        if len(password) < 8 or not any(char.isdigit() for char in password) or not any(char.isalpha() for char in password):
+            flash('Kata laluan mestilah sekurang-kurangnya 8 aksara dan mengandungi huruf dan nombor.')
+            return redirect(url_for('register'))
+
+        # Insert new user into the database
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO tbl_user (userName, userEmail, userPassword, userRole) VALUES (%s, %s, %s, 'user')", 
+                    (username, email, password))
         mysql.connection.commit()
         cur.close()
 
+        flash('Pendaftaran berjaya. Sila log masuk.', 'success')
         return redirect(url_for('login'))
+    
     return render_template('register.html')
 
 # Define the logout route
@@ -198,13 +225,14 @@ def history_summary(summary_id):
 def account_settings():
     if 'username' in session:
         if request.method == 'POST':
+            new_username = request.form.get('username')
             email = request.form['email']
             old_password = request.form['old_password']
             new_password = request.form['new_password']
             confirm_new_password = request.form['confirm_new_password']
 
             cur = mysql.connection.cursor()
-            cur.execute("SELECT userEmail, userPassword FROM tbl_user WHERE userName = %s", (session['username'],))
+            cur.execute("SELECT userEmail, userPassword, userName FROM tbl_user WHERE userName = %s", (session['username'],))
             user = cur.fetchone()
             cur.close()
 
@@ -212,16 +240,44 @@ def account_settings():
                 flash('Kata laluan lama yang salah')
                 return redirect(url_for('account_settings'))
 
+            # Check if email is changing and if it's already in use
             if email != user[0]:
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT * FROM tbl_user WHERE userEmail = %s", (email,))
+                existing_user = cur.fetchone()
+                cur.close()
+                if existing_user:
+                    flash('E-mel sudah wujud. Sila gunakan yang lain.')
+                    return redirect(url_for('account_settings'))
                 cur = mysql.connection.cursor()
                 cur.execute("UPDATE tbl_user SET userEmail = %s WHERE userName = %s", (email, session['username']))
                 mysql.connection.commit()
                 cur.close()
                 flash('E-mel berjaya dikemas kini')
 
+            # Check if username is changing and if it's already in use
+            if new_username and new_username != user[2]:
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT * FROM tbl_user WHERE userName = %s", (new_username,))
+                existing_user = cur.fetchone()
+                cur.close()
+                if existing_user:
+                    flash('Nama pengguna sudah wujud. Sila gunakan yang lain.')
+                    return redirect(url_for('account_settings'))
+                cur = mysql.connection.cursor()
+                cur.execute("UPDATE tbl_user SET userName = %s WHERE userName = %s", (new_username, session['username']))
+                mysql.connection.commit()
+                cur.close()
+                session['username'] = new_username
+                flash('Nama pengguna berjaya dikemas kini')
+
+            # Check if new password is provided and meets the requirements
             if new_password:
                 if new_password != confirm_new_password:
                     flash('Kata laluan tidak sepadan')
+                    return redirect(url_for('account_settings'))
+                if len(new_password) < 8 or not any(char.isdigit() for char in new_password) or not any(char.isalpha() for char in new_password):
+                    flash('Kata laluan mestilah sekurang-kurangnya 8 aksara dan mengandungi huruf dan nombor.')
                     return redirect(url_for('account_settings'))
                 cur = mysql.connection.cursor()
                 cur.execute("UPDATE tbl_user SET userPassword = %s WHERE userName = %s", (new_password, session['username']))
