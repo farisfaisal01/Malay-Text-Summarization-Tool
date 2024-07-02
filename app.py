@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, send_file, make_response
 from flask_mysqldb import MySQL
 import malaya
 from malaya_summarizer_abstractive import cleaning
@@ -12,6 +12,16 @@ from models import db
 from werkzeug.utils import secure_filename
 import os
 import matplotlib
+import json
+import base64
+from io import BytesIO
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib import utils
+from docx import Document
+from docx.shared import Inches
+
 matplotlib.use('Agg')
 
 # Import the separated functions
@@ -82,12 +92,19 @@ def login():
         user = cur.fetchone()
         cur.close()
 
-        if user and password == user[1]:
-            session['username'] = user[0]
-            session['userrole'] = user[2]
-            session['userid'] = user[3]
-            return redirect(url_for('home'))
-        flash('Nama pengguna atau kata laluan tidak sah')
+        if user:
+            db_username = user[0]
+            db_password = user[1]
+            if password == db_password:
+                session['username'] = db_username
+                session['userrole'] = user[2]
+                session['userid'] = user[3]
+                return redirect(url_for('home'))
+            else:
+                flash('Kata laluan tidak sah')
+        else:
+            flash('Nama pengguna atau e-mel tidak sah')
+
     return render_template('login.html')
 
 # Define the register route
@@ -151,7 +168,6 @@ def summarizer():
         
         cleaned_text = cleaning(rawtext)
         
-        word_scores = None
         kg_data = None
         entities = None
         
@@ -165,24 +181,24 @@ def summarizer():
             else:
                 r = extractive_model.sentence_level(sentences)
             summary_text = r['summary']
-            word_scores = sorted(r['score'], key=lambda item: item[1], reverse=True)[:20]
         
         kg_result = kg_model.generate([summary_text], max_length=256)
         kg_data = generate_knowledge_graph_images(kg_result)
         
         entities = entity_model.predict(summary_text)
         
-        print(entities)  # Print the structure of entities for debugging
+        kg_data_str = json.dumps(kg_data)
+        entities_str = json.dumps(entities)
 
         if 'username' in session:
             cur = mysql.connection.cursor()
-            cur.execute("INSERT INTO tbl_summary (userID, summaryContent, summaryDate) VALUES (%s, %s, %s)",
-                        (session['userid'], summary_text, datetime.utcnow()))
+            cur.execute("INSERT INTO tbl_summary (userID, summaryContent, summaryDate, kg_data, entities) VALUES (%s, %s, %s, %s, %s)",
+                        (session['userid'], summary_text, datetime.utcnow(), kg_data_str, entities_str))
             mysql.connection.commit()
             cur.close()
-            return render_template('summarizer.html', username=session['username'], text=rawtext, summary=summary_text, word_scores=word_scores, kg_data=kg_data, entities=entities)
+            return render_template('summarizer.html', username=session['username'], text=rawtext, summary=summary_text, kg_data=kg_data, entities=entities)
         else:
-            return render_template('summarizer.html', text=rawtext, summary=summary_text, word_scores=word_scores, kg_data=kg_data, entities=entities)
+            return render_template('summarizer.html', text=rawtext, summary=summary_text, kg_data=kg_data, entities=entities)
     elif 'username' in session:
         return render_template('summarizer.html', username=session['username'])
     else:
@@ -216,7 +232,9 @@ def history_summary(summary_id):
     if 'username' in session:
         summary = Summary.query.get(summary_id)
         if summary and (summary.userID == session['userid'] or session['userrole'] == 'admin'):
-            return render_template('history-summary.html', summary=summary)
+            kg_data = json.loads(summary.kg_data)
+            entities = json.loads(summary.entities)
+            return render_template('history-summary.html', summary=summary, kg_data=kg_data, entities=entities)
     flash('Anda tidak mempunyai kebenaran yang diperlukan untuk mengakses halaman ini.')
     return redirect(url_for('login'))
 
@@ -297,6 +315,8 @@ def export():
     format = request.args.get('format')
     text = request.args.get('text')
     date = request.args.get('date')
+    kg_data = request.args.get('kg_data')
+    entities = request.args.get('entities')
 
     export_funcs = {
         'pdf': export_pdf,
@@ -305,7 +325,7 @@ def export():
     }
 
     if format in export_funcs:
-        return export_funcs[format](text, date)
+        return export_funcs[format](text, date, kg_data, entities)
     else:
         return "Invalid format", 400
 

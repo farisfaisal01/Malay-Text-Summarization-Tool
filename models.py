@@ -24,6 +24,8 @@ class Summary(db.Model):
     userID = db.Column(db.Integer, db.ForeignKey('tbl_user.userID'), nullable=False)
     summaryContent = db.Column(db.Text, nullable=False)
     summaryDate = db.Column(db.Date, default=datetime.utcnow)
+    kg_data = db.Column(db.Text, nullable=True)
+    entities = db.Column(db.Text, nullable=True)
 
 def init_db(app):
     """
