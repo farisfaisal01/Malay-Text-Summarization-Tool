@@ -101,9 +101,9 @@ def login():
                 session['userid'] = user[3]
                 return redirect(url_for('home'))
             else:
-                flash('Kata laluan tidak sah')
+                flash('Kata laluan tidak sah. Sila cuba lagi.', 'error')
         else:
-            flash('Nama pengguna atau e-mel tidak sah')
+            flash('Nama pengguna atau e-mel tidak sah. Sila cuba lagi.', 'error')
 
     return render_template('login.html')
 
@@ -126,16 +126,16 @@ def register():
         cur.close()
 
         if user_by_username:
-            flash('Nama pengguna sudah wujud. Sila gunakan yang lain.')
+            flash('Nama pengguna sudah wujud. Sila gunakan yang lain.', 'error')
             return redirect(url_for('register'))
 
         if user_by_email:
-            flash('E-mel sudah wujud. Sila gunakan yang lain.')
+            flash('E-mel sudah wujud. Sila gunakan yang lain.', 'error')
             return redirect(url_for('register'))
 
         # Check if the password meets the requirements
         if len(password) < 8 or not any(char.isdigit() for char in password) or not any(char.isalpha() for char in password):
-            flash('Kata laluan mestilah sekurang-kurangnya 8 aksara dan mengandungi huruf dan nombor.')
+            flash('Kata laluan mestilah sekurang-kurangnya 8 aksara dan mengandungi huruf dan nombor.', 'error')
             return redirect(url_for('register'))
 
         # Insert new user into the database
@@ -214,7 +214,7 @@ def history():
         else:
             summaries = Summary.query.filter_by(userID=session['userid']).all()
             return render_template('history-selectsummary.html', summaries=summaries)
-    flash('Anda perlu log masuk untuk mengakses halaman ini.')
+    flash('Anda perlu log masuk untuk mengakses halaman ini.', 'error')
     return redirect(url_for('login'))
 
 # Define the history for specific user route
@@ -223,7 +223,7 @@ def history_user(user_id):
     if 'username' in session and session['userrole'] == 'admin':
         summaries = Summary.query.filter_by(userID=user_id).all()
         return render_template('history-selectsummary.html', summaries=summaries)
-    flash('Anda tidak mempunyai kebenaran yang diperlukan untuk mengakses halaman ini.')
+    flash('Anda tidak mempunyai kebenaran yang diperlukan untuk mengakses halaman ini.', 'error')
     return redirect(url_for('login'))
 
 # Define the history for specific summary route
@@ -235,7 +235,7 @@ def history_summary(summary_id):
             kg_data = json.loads(summary.kg_data)
             entities = json.loads(summary.entities)
             return render_template('history-summary.html', summary=summary, kg_data=kg_data, entities=entities)
-    flash('Anda tidak mempunyai kebenaran yang diperlukan untuk mengakses halaman ini.')
+    flash('Anda tidak mempunyai kebenaran yang diperlukan untuk mengakses halaman ini.', 'error')
     return redirect(url_for('login'))
 
 # Define the account settings route

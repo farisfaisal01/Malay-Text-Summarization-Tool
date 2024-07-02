@@ -16,7 +16,7 @@ Login
                         {% with messages = get_flashed_messages(with_categories=true) %}
                             {% if messages %}
                                 {% for category, message in messages %}
-                                    <div class="alert alert-danger" role="alert">
+                                <div class="alert {% if category == 'error' %}alert-danger{% elif category == 'success' %}alert-success{% endif %}" role="alert">
                                         {{ message }}
                                     </div>
                                 {% endfor %}
@@ -26,7 +26,7 @@ Login
                         <!-- Login form -->
                         <form method="POST" action="{{ url_for('login') }}" class="form-signin">
                             <div class="form-group">
-                                <input type="text" id="username" name="username" class="form-control" required placeholder="Nama Pengguna">
+                                <input type="text" id="username" name="username" class="form-control" required placeholder="Nama Pengguna / E-mel Pengguna">
                             </div>
                             <div class="form-group">
                                 <input type="password" id="password" name="password" class="form-control" required placeholder="Kata Laluan">

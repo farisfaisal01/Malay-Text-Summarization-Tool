@@ -13,13 +13,13 @@ Pendaftaran
                         <h1 class="text-center mb-4">Pendaftaran Akaun</h1>
                         
                         <!-- Display flash messages -->
-                        {% with messages = get_flashed_messages() %}
+                        {% with messages = get_flashed_messages(with_categories=true) %}
                             {% if messages %}
-                                <div class="alert alert-danger" role="alert">
-                                    {% for message in messages %}
-                                        {{ message }}
-                                    {% endfor %}
+                                {% for category, message in messages %}
+                                <div class="alert {% if category == 'error' %}alert-danger{% elif category == 'success' %}alert-success{% endif %}" role="alert">
+                                    {{ message }}
                                 </div>
+                                {% endfor %}
                             {% endif %}
                         {% endwith %}
 
