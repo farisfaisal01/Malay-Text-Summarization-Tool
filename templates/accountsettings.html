@@ -13,15 +13,13 @@ Tetapan Akaun
                         <h2 class="text-center mb-4">Tetapan Akaun</h2>
                         
                         <!-- Display flash messages -->
-                        {% with messages = get_flashed_messages() %}
+                        {% with messages = get_flashed_messages(with_categories=true) %}
                             {% if messages %}
-                                <div class="alert alert-info" role="alert">
-                                    <ul class="mb-0">
-                                        {% for message in messages %}
-                                            <li>{{ message }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
+                                {% for category, message in messages %}
+                                    <div class="alert {% if category == 'error' %}alert-danger{% elif category == 'success' %}alert-success{% endif %}" role="alert">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
                             {% endif %}
                         {% endwith %}
                         
@@ -34,19 +32,19 @@ Tetapan Akaun
 
                             <div class="form-group">
                                 <label for="email">E-mel:</label>
-                                <input type="email" id="email" name="email" class="form-control" value="{{ user.email }}" required>
+                                <input type="email" id="email" name="email" class="form-control" value="{{ user.email }}">
                             </div>
                             
                             <div class="form-group">
                                 <label for="old_password">Kata Laluan Lama:</label>
                                 <input type="password" id="old_password" name="old_password" class="form-control" required>
                             </div>
-                            
+                        
                             <div class="form-group">
                                 <label for="new_password">Kata Laluan Baru:</label>
                                 <input type="password" id="new_password" name="new_password" class="form-control">
                             </div>
-                            
+                        
                             <div class="form-group">
                                 <label for="confirm_new_password">Pengesahan Kata Laluan Baru:</label>
                                 <input type="password" id="confirm_new_password" name="confirm_new_password" class="form-control">

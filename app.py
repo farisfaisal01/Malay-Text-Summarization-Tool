@@ -249,29 +249,31 @@ def account_settings():
             new_password = request.form['new_password']
             confirm_new_password = request.form['confirm_new_password']
 
+            # Retrieve user details from database
             cur = mysql.connection.cursor()
             cur.execute("SELECT userEmail, userPassword, userName FROM tbl_user WHERE userName = %s", (session['username'],))
             user = cur.fetchone()
             cur.close()
 
+            # Validate old password
             if old_password != user[1]:
-                flash('Kata laluan lama yang salah')
+                flash('Kata laluan lama yang salah', 'error')
                 return redirect(url_for('account_settings'))
 
             # Check if email is changing and if it's already in use
-            if email != user[0]:
+            if email and email != user[0]:
                 cur = mysql.connection.cursor()
                 cur.execute("SELECT * FROM tbl_user WHERE userEmail = %s", (email,))
                 existing_user = cur.fetchone()
                 cur.close()
                 if existing_user:
-                    flash('E-mel sudah wujud. Sila gunakan yang lain.')
+                    flash('E-mel sudah wujud. Sila gunakan yang lain.', 'error')
                     return redirect(url_for('account_settings'))
                 cur = mysql.connection.cursor()
                 cur.execute("UPDATE tbl_user SET userEmail = %s WHERE userName = %s", (email, session['username']))
                 mysql.connection.commit()
                 cur.close()
-                flash('E-mel berjaya dikemas kini')
+                flash('E-mel berjaya dikemas kini', 'success')
 
             # Check if username is changing and if it's already in use
             if new_username and new_username != user[2]:
@@ -280,34 +282,39 @@ def account_settings():
                 existing_user = cur.fetchone()
                 cur.close()
                 if existing_user:
-                    flash('Nama pengguna sudah wujud. Sila gunakan yang lain.')
+                    flash('Nama pengguna sudah wujud. Sila gunakan yang lain.', 'error')
                     return redirect(url_for('account_settings'))
                 cur = mysql.connection.cursor()
                 cur.execute("UPDATE tbl_user SET userName = %s WHERE userName = %s", (new_username, session['username']))
                 mysql.connection.commit()
                 cur.close()
                 session['username'] = new_username
-                flash('Nama pengguna berjaya dikemas kini')
+                flash('Nama pengguna berjaya dikemas kini', 'success')
 
             # Check if new password is provided and meets the requirements
             if new_password:
                 if new_password != confirm_new_password:
-                    flash('Kata laluan tidak sepadan')
+                    flash('Kata laluan tidak sepadan. Sila masukkan semula.', 'error')
                     return redirect(url_for('account_settings'))
-                if len(new_password) < 8 or not any(char.isdigit() for char in new_password) or not any(char.isalpha() for char in new_password):
-                    flash('Kata laluan mestilah sekurang-kurangnya 8 aksara dan mengandungi huruf dan nombor.')
+                elif len(new_password) < 8 or not any(char.isdigit() for char in new_password) or not any(char.isalpha() for char in new_password):
+                    flash('Kata laluan mestilah sekurang-kurangnya 8 aksara dan mengandungi huruf dan nombor.', 'error')
                     return redirect(url_for('account_settings'))
+                
+                # Update password if everything is correct
                 cur = mysql.connection.cursor()
                 cur.execute("UPDATE tbl_user SET userPassword = %s WHERE userName = %s", (new_password, session['username']))
                 mysql.connection.commit()
                 cur.close()
-                flash('Kata laluan berjaya dikemas kini')
+                flash('Kata Laluan berjaya dikemas kini', 'success')
 
-            flash('Tetapan akaun berjaya dikemas kini')
+            # Redirect to account settings page
             return redirect(url_for('account_settings'))
+
+        # Handle GET request for account settings page
         return render_template('accountsettings.html', user=session['username'])
-    else:
-        return redirect(url_for('login'))
+
+    # Redirect to login if not logged in
+    return redirect(url_for('login'))
 
 # Define the export route
 @app.route('/export')
