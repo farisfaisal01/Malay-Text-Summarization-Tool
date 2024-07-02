@@ -123,11 +123,6 @@ def export_txt(text, date, kg_data, entities):
     buffer = BytesIO()
     content = f"Summary Date: {date}\nSummary Content:\n{text}\n"
 
-    if kg_data:
-        content += "\nKnowledge Graph:\n"
-        for image in json.loads(kg_data):
-            content += f"[Image: {image}]\n"
-
     if entities:
         content += "\nEntities:\n"
         for entity_type, entity_list in json.loads(entities).items():

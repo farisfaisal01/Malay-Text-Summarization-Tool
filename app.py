@@ -51,6 +51,13 @@ kg_model = malaya.knowledge_graph.huggingface()
 # Import the general entity model from Malaya
 entity_model = malaya.entity.general_entity()
 
+# Convert datetime objects to strings
+def convert_to_serializable(obj):
+    if isinstance(obj, datetime):
+        return obj.strftime('%Y-%m-%d %H:%M:%S')
+    else:
+        raise TypeError(f'Object of type {obj.__class__.__name__} is not JSON serializable')
+
 # Initialize the Flask application
 app = Flask(__name__)
 app.secret_key = "your-secret-key"
@@ -186,9 +193,12 @@ def summarizer():
         kg_data = generate_knowledge_graph_images(kg_result)
         
         entities = entity_model.predict(summary_text)
+
+        # Serialize entities to JSON
+        entities_str = json.dumps(entities, default=convert_to_serializable)
         
         kg_data_str = json.dumps(kg_data)
-        entities_str = json.dumps(entities)
+        # entities_str = json.dumps(entities)
 
         if 'username' in session:
             cur = mysql.connection.cursor()
