@@ -311,7 +311,12 @@ def account_settings():
             return redirect(url_for('account_settings'))
 
         # Handle GET request for account settings page
-        return render_template('accountsettings.html', user=session['username'])
+        # Retrieve current user details to pre-fill the form
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT userEmail, userName FROM tbl_user WHERE userName = %s", (session['username'],))
+        user = cur.fetchone()
+        cur.close()
+        return render_template('accountsettings.html', user=session['username'], email=user[0])
 
     # Redirect to login if not logged in
     return redirect(url_for('login'))

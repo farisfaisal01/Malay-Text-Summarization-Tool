@@ -27,12 +27,12 @@ Tetapan Akaun
                         <form method="POST" action="{{ url_for('account_settings') }}">
                             <div class="form-group">
                                 <label for="username">Nama Pengguna Baru:</label>
-                                <input type="text" id="username" name="username" class="form-control">
+                                <input type="text" id="username" name="username" class="form-control" value="{{ user }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="email">E-mel:</label>
-                                <input type="email" id="email" name="email" class="form-control" value="{{ user.email }}">
+                                <input type="email" id="email" name="email" class="form-control" value="{{ email }}">
                             </div>
                             
                             <div class="form-group">
