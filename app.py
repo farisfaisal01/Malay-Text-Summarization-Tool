@@ -267,7 +267,7 @@ def account_settings():
 
             # Validate old password
             if old_password != user[1]:
-                flash('Kata laluan lama yang salah', 'error')
+                flash('Kata laluan lama yang salah. Sila cuba lagi.', 'error')
                 return redirect(url_for('account_settings'))
 
             # Check if email is changing and if it's already in use
@@ -283,7 +283,7 @@ def account_settings():
                 cur.execute("UPDATE tbl_user SET userEmail = %s WHERE userName = %s", (email, session['username']))
                 mysql.connection.commit()
                 cur.close()
-                flash('E-mel berjaya dikemas kini', 'success')
+                flash('E-mel berjaya dikemas kini.', 'success')
 
             # Check if username is changing and if it's already in use
             if new_username and new_username != user[2]:
@@ -299,7 +299,7 @@ def account_settings():
                 mysql.connection.commit()
                 cur.close()
                 session['username'] = new_username
-                flash('Nama pengguna berjaya dikemas kini', 'success')
+                flash('Nama pengguna berjaya dikemas kini.', 'success')
 
             # Check if new password is provided and meets the requirements
             if new_password:
@@ -315,7 +315,7 @@ def account_settings():
                 cur.execute("UPDATE tbl_user SET userPassword = %s WHERE userName = %s", (new_password, session['username']))
                 mysql.connection.commit()
                 cur.close()
-                flash('Kata Laluan berjaya dikemas kini', 'success')
+                flash('Kata Laluan berjaya dikemas kini.', 'success')
 
             # Redirect to account settings page
             return redirect(url_for('account_settings'))
