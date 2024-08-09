@@ -57,7 +57,7 @@ def convert_to_serializable(obj):
         return obj.strftime('%Y-%m-%d %H:%M:%S')
     else:
         raise TypeError(f'Object of type {obj.__class__.__name__} is not JSON serializable')
-
+    
 # Initialize the Flask application
 app = Flask(__name__)
 app.secret_key = "your-secret-key"
