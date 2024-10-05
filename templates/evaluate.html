@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Perumus - Evaluation
+{% endblock %}
+
+{% block content %}
+<div class="container p-5">
+    <!-- Evaluation Form -->
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <form method="POST" action="{{ url_for('evaluate') }}">
+                <h3 class="text-center text-primary">Penilai</h3>
+
+                <!-- Input for Generated Summary -->
+                <div class="form-group">
+                    <label for="summary">Rumusan Baru:</label>
+                    <textarea id="summary" name="summary" rows="4" class="form-control" required placeholder="Enter the generated summary"></textarea>
+                </div>
+
+                <!-- Input for Reference Summary -->
+                <div class="form-group">
+                    <label for="reference">Rumusan Rujukan:</label>
+                    <textarea id="reference" name="reference" rows="4" class="form-control" required placeholder="Enter the reference summary"></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button class="btn btn-primary hover-btn" type="submit">Nilai</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if results %}
+    <!-- Display Evaluation Results -->
+    <div class="row mt-5">
+        <div class="col-md-8 offset-md-2">
+            <h3 class="text-center text-primary">Evaluation Results:</h3>
+            <div class="card custom-card">
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>ROUGE-1 F1:</strong> {{ results.rouge1_f1 | round(4) }}</li>
+                        <li class="list-group-item"><strong>ROUGE-2 F1:</strong> {{ results.rouge2_f1 | round(4) }}</li>
+                        <li class="list-group-item"><strong>ROUGE-L F1:</strong> {{ results.rougeL_f1 | round(4) }}</li>
+                        <li class="list-group-item"><strong>Cosine Similarity:</strong> {{ results.cosine_similarity | round(4) }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Legend explaining the evaluation metrics -->
+    <div class="row mt-3">
+        <div class="col-md-8 offset-md-2">
+            <div class="card custom-card">
+                <div class="card-body">
+                    <h5 class="text-center text-info">Evaluation Metric Legend</h5>
+                    <ul>
+                        <li><strong>ROUGE-1 F1:</strong> Mengukur pertindihan unigram (perkataan tunggal) antara ringkasan yang dijana dan ringkasan rujukan. Ia menilai sejauh mana perkataan individu sepadan antara kedua-dua ringkasan.</li>
+                        <li><strong>ROUGE-2 F1:</strong> Mengukur pertindihan bigram (pasangan perkataan bersebelahan) antara ringkasan yang dijana dan ringkasan rujukan. Ini membantu dalam menilai kefasihan dan ketepatan konteks ringkasan.</li>
+                        <li><strong>ROUGE-L F1:</strong> Menumpukan kepada subsekvens terpanjang yang sepadan (Longest Common Subsequence, LCS) antara ringkasan yang dijana dan ringkasan rujukan. Ia berguna untuk menilai struktur keseluruhan dan koherensi ringkasan.</li>
+                        <li><strong>Keserupaan Kosinus (Cosine Similarity):</strong> Mengukur keserupaan antara kedua-dua ringkasan berdasarkan sudut antara vektor representasi mereka. Semakin hampir nilai keserupaan kosinus kepada 1, semakin serupa kandungan kedua-dua ringkasan.</li>
+                    </ul>                    
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Additional container for spacing -->
+<div class="container mt-5">
+</div>
+
+{% endblock %}

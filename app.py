@@ -21,6 +21,10 @@ from reportlab.lib.units import inch
 from reportlab.lib import utils
 from docx import Document
 from docx.shared import Inches
+from flask import Flask, render_template, request
+from rouge_score import rouge_scorer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 matplotlib.use('Agg')
 
@@ -372,6 +376,41 @@ def upload_file():
 
         return jsonify({'success': True, 'text': text})
     return jsonify({'success': False, 'message': 'Format fail tidak sah'})
+
+def calculate_metrics(summary, reference):
+    # ROUGE scorer setup
+    scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
+
+    # Compute ROUGE scores
+    rouge_scores = scorer.score(reference, summary)
+
+    # Cosine Similarity calculation using TF-IDF
+    vectorizer = TfidfVectorizer().fit_transform([summary, reference])
+    vectors = vectorizer.toarray()
+    cosine_sim = cosine_similarity([vectors[0]], [vectors[1]])[0][0]
+
+    # Return the computed metrics rounded to 4 decimal places
+    results = {
+        'rouge1_f1': round(rouge_scores['rouge1'].fmeasure, 4),
+        'rouge2_f1': round(rouge_scores['rouge2'].fmeasure, 4),
+        'rougeL_f1': round(rouge_scores['rougeL'].fmeasure, 4),
+        'cosine_similarity': round(cosine_sim, 4)
+    }
+    return results
+
+@app.route('/evaluate', methods=['GET', 'POST'])
+def evaluate():
+    if request.method == 'POST':
+        # Retrieve input texts
+        summary = request.form.get('summary')
+        reference = request.form.get('reference')
+        
+        # Calculate ROUGE and Cosine Similarity metrics
+        results = calculate_metrics(summary, reference)
+
+        return render_template('evaluate.html', results=results)
+    return render_template('evaluate.html')
+
 
 # Run the application
 if __name__ == "__main__":
